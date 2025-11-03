@@ -1,5 +1,4 @@
 import React from 'react'
-import Hello from '../components/hello';
 
 const Home = () => {
   console.log('What type component am I?');
@@ -9,7 +8,7 @@ const Home = () => {
       <div className='text-5xl underline'>
         Welcome to Next.js
       </div>
-      <Hello />
+      
     </main>
   )
 }

@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id          Int       @id @default(autoincrement())
+  title       String    @db.VarChar(100)
+  slug        String    @unique
+  description String    @db.VarChar(1000)
+  overview    String    @db.VarChar(500)
+  image       String
+  venue       String
+  location    String
+  date        DateTime
+  time        String
+  mode        Mode
+  audience    String
+  agenda      Json       // ⬅️ ubah dari String[] ke Json
+  organizer   String
+  tags        Json       // ⬅️ ubah dari String[] ke Json
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  bookings    Booking[]
+
+  @@index([slug])
+  @@index([date, mode])
+}
+
+model Booking {
+  id         Int      @id @default(autoincrement())
+  eventId    Int
+  email      String   @db.VarChar(255)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  event      Event    @relation(fields: [eventId], references: [id])
+
+  @@unique([eventId, email], name: "uniq_event_email")
+  @@index([eventId])
+  @@index([email])
+  @@index([eventId, createdAt])
+}
+
+enum Mode {
+  online
+  offline
+  hybrid
+}

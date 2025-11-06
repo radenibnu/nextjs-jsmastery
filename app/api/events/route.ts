@@ -3,6 +3,22 @@ import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
+// ✅ READ ALL (GET)
+export async function GET() {
+  try {
+    const events = await prisma.event.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+    return NextResponse.json(events, { status: 200 });
+  } catch (error: any) {
+    console.error(error);
+    return NextResponse.json(
+      { message: "Failed to fetch events", error: error.message },
+      { status: 500 }
+    );
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
